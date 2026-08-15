@@ -1,55 +1,66 @@
 # dsh-composer-resize
 
-Drag-to-resize for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) web composer.
+**中文简介**
 
-A small handle sits on the **top edge** of the composer card:
+`dsh-composer-resize` 是 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness)（DSH）网页端的一个轻量输入框拖拽调节插件。它在输入框卡片的上边缘提供一个小拖拽把手：**向上拖，输入框变高；向下拖，输入框变矮**。拖拽过程中视图始终锚定在文本底部，长草稿缩小后依然能看到最后几行，不会出现底部行被裁切的问题。插件为纯前端实现——不调用模型、不执行宿主命令、不写入会话日志，开箱即用。
 
-- **Drag up** → the input box grows taller.
-- **Drag down** → the input box shrinks.
-- While resizing, the scroll area is **bottom-anchored**, so shrinking a long draft keeps the last lines in view (no clipped bottom lines).
+**English Intro**
+
+`dsh-composer-resize` is a lightweight drag-to-resize plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) web composer. It puts a small handle on the **top edge** of the input card: **drag up to make the composer taller, drag down to make it shorter**. While resizing, the view stays bottom-anchored, so shrinking a long draft keeps the last lines visible and nothing gets clipped. Purely client-side — no model calls, no host commands, nothing written to session logs.
+
+---
+
+## Features / 功能
+
+- **Drag up = taller, drag down = shorter** — the drag direction matches the deformation direction.
+  **向上拖=变高，向下拖=变矮** — 拖动方向与变形方向一致。
+- **Bottom-anchored scrolling** while resizing; long drafts keep their last lines in view.
+  **拖拽时底部锚定**，长草稿缩小后仍显示最后几行。
 - Range: 52 px to 75% of the viewport height (720 px cap).
-- Pure browser-side plugin: no host commands, no LLM calls, nothing written to session logs.
+  范围：52px ~ 75% 视口高度（上限 720px）。
+- Pure browser-side plugin using stable DSH `data-*` attributes.
+  纯浏览器端插件，锚定 DSH 稳定的 `data-*` 属性。
 
-## Compatibility
+## Compatibility / 兼容性
 
-- DSH `0.1.0-rc.6` web UI (uses stable `data-composer-card` / `data-input-scroll` attributes).
-- Chrome/Edge and other Chromium browsers recommended (Pointer Events).
+- DSH `0.1.0-rc.6` web UI (`data-composer-card` / `data-input-scroll`).
+- Chromium-based browsers recommended (Pointer Events).
+  建议使用 Chrome / Edge 等 Chromium 内核浏览器。
 
-## Install
+## Install / 安装
 
-### From GitHub (after publishing)
-
-```sh
-dsh plugin --profile web add github:<owner>/dsh-composer-resize
-```
-
-Then restart DSH, or hard-refresh the web page (`Ctrl+F5`) if the server is already running and serving `/plugins` with `Cache-Control: no-cache`.
-
-### From npm (if published)
+### From GitHub / 从 GitHub 安装
 
 ```sh
-dsh plugin --profile web add dsh-composer-resize
+dsh plugin --profile web add github:rosefinch539/dsh-composer-resize
 ```
 
-### From a local tarball
+Restart DSH, or hard-refresh the web page (`Ctrl+F5`) if `/plugins` is served with `Cache-Control: no-cache`.
+重启 DSH；若服务端 `/plugins` 响应为 `no-cache`，直接强刷网页（Ctrl+F5）即可。
+
+### From the release tarball / 用 Release 里的 tgz 安装
 
 ```sh
-dsh plugin --profile web add ./dsh-composer-resize-1.1.0.tgz
+dsh plugin --profile web add https://github.com/rosefinch539/dsh-composer-resize/releases/download/v1.1.0/dsh-composer-resize-1.1.0.tgz
 ```
 
-## Uninstall
+## Uninstall / 卸载
 
 ```sh
 dsh plugin --profile web remove dsh-composer-resize
 ```
 
-## How it works
+## How it works / 工作原理
 
 - The node half is a no-op; the browser half is served at `/plugins/dsh-composer-resize/client.js`.
-- It injects a `<style>` block plus a `[data-resize-handle]` element per `[data-composer-card]`.
+  宿主侧为空实现；浏览器侧从 `/plugins/dsh-composer-resize/client.js` 加载。
+- It injects a `<style>` block plus one `[data-resize-handle]` element per `[data-composer-card]`.
+  注入一段样式，并给每个输入框卡片添加一个 `[data-resize-handle]` 拖拽把手。
 - Pointer drag sets inline `height`/`max-height` on `[data-input-scroll]` and pins `scrollTop` to the bottom on every frame.
+  拖拽时给 `[data-input-scroll]` 设置内联高度，并在每一帧把 `scrollTop` 钉在底部。
 - A `MutationObserver` re-attaches the handle if React re-renders the composer.
+  通过 `MutationObserver` 在 React 重渲染后自动重新挂载把手。
 
-## License
+## License / 许可证
 
 MIT
