@@ -1,0 +1,45 @@
+{
+  "name": "dsh-composer-resize",
+  "version": "1.1.0",
+  "description": "DSH web composer resizer: drag the handle on the top edge of the input card — up to grow, down to shrink — with bottom-anchored scrolling for long drafts.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": []
+    }
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "composer",
+    "resize",
+    "input"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rosefinch539/dsh-composer-resize.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rosefinch539/dsh-composer-resize/issues"
+  }
+}
