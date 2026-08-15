@@ -1,0 +1,8 @@
+# dsh-composer-resize bundle patch
+
+# `dsh plugin --profile <name> add ...` reconciles this package into
+# `dsh.profile.bundles`; this patch inserts the dual-face row for the bundle.
+# The browser half is discovered through the package.json `dsh.client` block.
+- insert:
+    - id: composer-resize
+      name: dsh-composer-resize
